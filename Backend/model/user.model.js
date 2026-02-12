@@ -36,6 +36,26 @@ const UserSchema = mongoose.Schema({
                 ref:'Post'
             }
        ]
+    },
+    following:{
+        type:[
+            {
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'User'
+            }
+        ]
+    },
+    followers:{
+        type:[
+            {
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'User'
+            }
+        ]
+    },
+    story:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Story'
     }
 })
 const UserModel = mongoose.model("User",UserSchema);

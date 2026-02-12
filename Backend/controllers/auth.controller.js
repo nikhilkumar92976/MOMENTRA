@@ -2,6 +2,7 @@ const UserModel = require('../model/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const uploadFile = require('../services/storage.service')
+const mongoose = require('mongoose')
 
 const createAccount = async(req,res) =>{
     try{
@@ -247,7 +248,7 @@ const updateUserProfile = async(req,res)=>{
         return res.status(200).json({
             success:true,
             message:"User Profile updated successfully!",
-            user,userData
+            userData
         })
         
     }
@@ -260,6 +261,41 @@ const updateUserProfile = async(req,res)=>{
     }
 }
 
+const getProfile = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID",
+      });
+    }
+
+    const user = await UserModel.findById(userId)
+      
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile fetched successfully ",
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 const forgotPassword = async(req,res)=>{
 
 }
@@ -270,4 +306,5 @@ module.exports = {createAccount,
                     updatePassword,
                     deleteAccount,
                     updateUserProfile,
+                    getProfile,
                 }

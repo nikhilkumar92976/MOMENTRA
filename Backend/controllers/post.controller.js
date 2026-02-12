@@ -84,4 +84,70 @@ const deletePost = async(req,res)=>{
         })
     }
 }
-module.exports = {createPost,deletePost}
+
+const updatePost = async(req,res)=>{
+    try{
+        const post = await postModel.findById(req.params.id);
+        if(!post){
+            return res.status(404).json({
+                message:"Post not found"
+            })
+        }
+        console.log("req.userId :",req.userId);
+        console.log("post.user:",post.user.toString())
+        if(req.userId !== post.user.toString()){
+            return res.status(409).json({
+                message:"You don't have access to update the post"
+            })
+        }
+        const user = await userModel.findById(req.userId)
+        const {caption} = req.body;
+        post.caption = caption;
+
+        await post.save();
+
+        return res.status(200).json({
+            success:true,
+            message:"Post updated succesFully",
+            post
+        })
+
+    }
+    catch(err){
+        console.log(err)
+        return res.status(500).json({
+            sucess:false,
+            message:"Somting went wrong"
+        })
+    }
+}
+const getUserAllPost = async(req,res)=>{
+    try{
+       const user = await userModel.findById(req.params.id);
+       console.log(req.params.id)
+       if(!user){
+            return res.status(409).json({
+                message:"Unable to find user"
+            })
+       }
+       const posts = await postModel.find({user : user._id});
+
+       return res.status(200).json({
+            message:"User all posts fetched successfully",
+            posts
+       })
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success:false,
+            message:"Somting went wrong!"
+        })
+    }
+}
+module.exports = {
+                    createPost,
+                    deletePost,
+                    updatePost,
+                    getUserAllPost,
+                }

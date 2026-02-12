@@ -9,6 +9,7 @@ const upload = multer({storage:multer.memoryStorage()})
 
 router.post('/createpost',authMiddleware,upload.single("image"),postController.createPost)
 router.delete('/deletepost/:id',authMiddleware,postController.deletePost)
-
+router.patch('/update-post/:id',authMiddleware,postController.updatePost)
+router.get('/get-user-allpost/:id',authMiddleware,postController.getUserAllPost)
 
 module.exports = router;

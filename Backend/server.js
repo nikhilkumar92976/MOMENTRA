@@ -7,6 +7,8 @@ const connectDatabase = require('./config/connect.database')
 
 const authRoute = require('./routes/auth.route')
 const postRoute = require('./routes/post.route')
+const socalRoute = require('./routes/socalActivity.route')
+const storyRoute = require('./routes/story.route')
 
 const PORT = process.env.PORT || 3000
 
@@ -19,6 +21,8 @@ connectDatabase();
 
 app.use('/auth',authRoute)
 app.use('/post',postRoute)
+app.use('/social',socalRoute)
+app.use('/story',storyRoute)
 
 app.get('/',(req,res)=>{
     res.send("Hello World");
