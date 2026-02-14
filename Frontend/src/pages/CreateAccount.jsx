@@ -1,7 +1,33 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import useAuth from "../hooks/useAuth";
 
 const CreateAccount = () => {
+  const [email, setEmail] = useState('')
+  const [fullname, setFullname] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(null)
+  const auth = useAuth()
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError(null)
+    try {
+      const res = await auth.signup({ username, fullname, email, password })
+      if (res && res.success) {
+        toast.success("Account created successfully!")
+        navigate('/home')
+      }
+    } catch (err) {
+      const errorMsg = err.message || 'Signup failed'
+      setError(errorMsg)
+      toast.error(errorMsg)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-black flex items-center justify-center text-white">
       <div className="w-full max-w-sm px-6">
@@ -17,37 +43,48 @@ const CreateAccount = () => {
         </p>
 
         {/* Signup Form UI */}
-        <div className="space-y-3">
+        <form className="space-y-3" onSubmit={handleSubmit}>
           <input
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             type="text"
             placeholder="Mobile Number or Email"
             className="w-full px-3 py-2 bg-zinc-900 border border-zinc-700 rounded text-sm placeholder-gray-400 focus:outline-none focus:border-gray-500"
           />
 
           <input
+            value={fullname}
+            onChange={e => setFullname(e.target.value)}
             type="text"
             placeholder="Full Name"
             className="w-full px-3 py-2 bg-zinc-900 border border-zinc-700 rounded text-sm placeholder-gray-400 focus:outline-none focus:border-gray-500"
           />
 
           <input
+            value={username}
+            onChange={e => setUsername(e.target.value)}
             type="text"
             placeholder="Username"
             className="w-full px-3 py-2 bg-zinc-900 border border-zinc-700 rounded text-sm placeholder-gray-400 focus:outline-none focus:border-gray-500"
           />
 
           <input
+            value={password}
+            onChange={e => setPassword(e.target.value)}
             type="password"
             placeholder="Password"
             className="w-full px-3 py-2 bg-zinc-900 border border-zinc-700 rounded text-sm placeholder-gray-400 focus:outline-none focus:border-gray-500"
           />
 
           <button
+            type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 py-2 rounded font-semibold text-sm transition"
           >
             Sign up
           </button>
-        </div>
+        </form>
+
+        {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
 
         {/* Terms */}
         <p className="text-center text-xs text-gray-500 mt-5 leading-relaxed">
