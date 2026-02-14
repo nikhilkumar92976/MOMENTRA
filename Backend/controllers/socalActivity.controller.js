@@ -88,7 +88,7 @@ const likePost = async(req,res)=>{
         else{
             //like
             post.likes.push(userId)
-            await notficationModel.create({
+            await notificationModel.create({
                 reciver:post.user.toString(),
                 sender:userId,
                 type:'like'
@@ -240,7 +240,7 @@ const followUser = async(req,res)=>{
             user.following.addToSet(targetUserId);
             targetUser.followers.addToSet(userId);
 
-            await notficationModel.create({
+            await notificationModel.create({
                 reciver:targetUser,
                 sender:user,
                 type:'follow'

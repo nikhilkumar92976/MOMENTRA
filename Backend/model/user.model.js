@@ -54,8 +54,12 @@ const UserSchema = mongoose.Schema({
         ]
     },
     story:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Story'
+        type:[
+            {
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Story'
+            }
+        ]
     }
 })
 const UserModel = mongoose.model("User",UserSchema);
