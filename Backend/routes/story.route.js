@@ -11,6 +11,7 @@ router.post('/addstory',authMiddleware,upload.single("image"),storyController.ad
 router.get('/:userid',authMiddleware,storyController.getUserStory)
 router.get('/',authMiddleware,storyController.getFollowingUserStory)
 router.delete('/deletestory/:id',authMiddleware,storyController.deleteStory)
+router.post('/like/:id',authMiddleware,storyController.likeStory)
 
 
 module.exports = router;

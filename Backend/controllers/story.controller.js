@@ -1,6 +1,7 @@
 const storyModel = require('../model/story.model')
 const userModel = require('../model/user.model')
 const uploadFile = require('../services/storage.service')
+const notficationModel = require('../model/story.model')
 
 const addStory = async(req,res)=>{
     try{
@@ -179,7 +180,7 @@ const deleteStory = async(req,res)=>{
 const likeStory = async(req,res)=>{
     try{
             const userId = req.userId;
-            const story = await storyModel.findByIdAndUpdate(req.params.id)
+            const story = await storyModel.findById(req.params.id)
             if(!story){
                 return res.status(404).json({
                     message:"Story Not found!"
@@ -190,28 +191,30 @@ const likeStory = async(req,res)=>{
     
             if(isLike){
                 //unlike
-                post.likes.pull(userId)
+                story.likes.pull(userId)
             }
             else{
                 //like
-                post.likes.push(userId)
-                await notficationModel.create({
-                    reciver:post.user.toString(),
-                    sender:userId,
-                    type:'like'
-                })
+                story.likes.push(userId)
+                console.log("storyId :", story.user.toString())
+                // await notficationModel.create({
+                //     reciver:story.user.toString(),
+                //     sender:userId,
+                //     type:'like'
+                // })
+                console.log("userId :", userId)
             }
     
-            await post.save();
+            await story.save();
     
-            await post.populate("likes","username profile_pic")
+            await story.populate("likes","username profile_pic")
     
     
             return res.status(200).json({
                 sucess:true,
-                message:isLike?"UnLike successfully":"Liked successfully",
-                likeCount:post.likes.length,
-                post
+                message:isLike?"Story UnLike successfully":"Story Liked successfully",
+                likeCount:story.likes.length,
+                story
             })
            
         }

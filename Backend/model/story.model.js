@@ -12,6 +12,14 @@ const storyModel = mongoose.Schema({
     text:{
         type:String
     },
+    likes:{
+        type:[
+            {
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'User',
+            }
+        ]
+    },
     expiresAt: {
       type: Date,
       default: () => Date.now() + 24 * 60 * 60 * 1000, // 24 hours
