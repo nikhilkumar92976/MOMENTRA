@@ -231,6 +231,7 @@ const updateUserProfile = async(req,res)=>{
         if(fullname) user.fullname = fullname;
         if(date_of_birth) user.date_of_birth = date_of_birth;
         if(bio) user.bio = bio;
+        if(profilePicUrl) user.profile_pic = profilePicUrl;
 
         if(username && username !== user.username){
             const usernameExist = await UserModel.findOne({username})
@@ -273,7 +274,9 @@ const getProfile = async (req, res) => {
     }
 
     const user = await UserModel.findById(userId)
-      
+      .populate('posts', 'image caption likes comments timestamps')
+      .populate('followers', 'fullname username profile_pic')
+      .populate('following', 'fullname username profile_pic')
 
     if (!user) {
       return res.status(404).json({
